@@ -1,4 +1,4 @@
-name: container build
+name: Container build
 "on":
   push:
     tags:
@@ -14,6 +14,9 @@ name: container build
         default: "test"
 
 jobs:
+  test:
+    uses: ./.github/workflows/unit-tests.yml
+
   build:
     name: Build container
     runs-on: ubuntu-22.04
@@ -40,8 +43,8 @@ jobs:
         with:
           images: ghcr.io/${{ github.repository_owner }}/bgpq4
           tags: |
+            # pick up tag provided from workflow_dispatch user's input
             type=raw,value=${{ inputs.tag }}
-            # type=pep440,pattern={{raw}}
             type=ref,event=tag
             type=ref,event=branch
             # git short commit
